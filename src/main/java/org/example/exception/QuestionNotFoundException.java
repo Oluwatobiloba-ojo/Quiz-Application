@@ -1,6 +1,4 @@
-package org.example.services.user;
-
-import org.example.data.model.Question;
+package org.example.exception;
 
 public class QuestionNotFoundException extends RuntimeException {
     public QuestionNotFoundException(String message){

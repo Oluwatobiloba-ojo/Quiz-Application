@@ -4,18 +4,72 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fbd26986-1d22-44c6-95e0-7563d76ea506" name="Changes" comment="" />
+    <list default="true" id="fbd26986-1d22-44c6-95e0-7563d76ea506" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/Main.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/data/model/Question.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/data/model/QuizPage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/data/model/Role.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/data/model/User.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/data/repository/QuestionRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/data/repository/QuizPageRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/data/repository/UserRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/request/AddQuestionRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/request/AddQuizRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/request/LoginRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/request/RegisterRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/request/UpdateQuestionRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/response/AddQuizResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/exception/ActionDoneException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/exception/AnswerNotFoundException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/exception/FileExistException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/exception/InvalidFormatDetailException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/exception/InvalidLoginDetail.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/exception/PasswordNotMatchExceptions.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/exception/QuestionBlankException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/exception/QuestionNotFoundException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/exception/QuestionTitleExistException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/exception/QuizAppExistException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/exception/UserAuthorizeException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/exception/UserExistException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/services/page/PageService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/services/page/PageServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/services/question/QuestionService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/services/question/QuestionServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/services/user/UserService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/services/user/UserServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/util/Mapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/util/Validation.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/org/example/services/user/UserServiceTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/resources/test.properties" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JUnit5 Test Class" />
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 4
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
   <component name="ProjectId" id="2bSerud0bsUgKsDMQ2BvZWT8GL2" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -24,13 +78,136 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
     "git-widget-placeholder": "master",
+    "last_directory_selection": "C:/Users/User/IdeaProjects/Champions_QuizApp/src/main/java/org/example/dto/request",
+    "last_opened_file_path": "C:/Users/User/IdeaProjects/ArtHouse",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "spring.configuration.checksum": "95d85dcb8e1eb97d1ac3e772af43a58e",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="org.example.dto.request" />
+      <recent name="org.example.services.user" />
+      <recent name="org.example.exception" />
+      <recent name="org.example.util" />
+    </key>
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="org.example.services.user" />
+    </key>
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="org.example.services.user" />
+      <recent name="org.example.services.quiz" />
+      <recent name="org.example.services" />
+    </key>
+  </component>
+  <component name="RunManager" selected="JUnit.UserServiceTest">
+    <configuration name="UserServiceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Champions_QuizApp" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.example.exception.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.example.services.user" />
+      <option name="MAIN_CLASS_NAME" value="org.example.services.user.UserServiceTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UserServiceTest.testThatQuestionsWhenItHasBeenAddedWeCanAddQuestionToItLaterButIfTitleIsWrongThrowExcpetion" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Champions_QuizApp" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.example.services.user.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.example.services.user" />
+      <option name="MAIN_CLASS_NAME" value="org.example.services.user.UserServiceTest" />
+      <option name="METHOD_NAME" value="testThatQuestionsWhenItHasBeenAddedWeCanAddQuestionToItLaterButIfTitleIsWrongThrowExcpetion" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UserServiceTest.testThatWhenQuizHaveBeenAddedUserCanStillAddQuestionToTheQuiz" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Champions_QuizApp" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.example.services.user.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.example.services.user" />
+      <option name="MAIN_CLASS_NAME" value="org.example.services.user.UserServiceTest" />
+      <option name="METHOD_NAME" value="testThatWhenQuizHaveBeenAddedUserCanStillAddQuestionToTheQuiz" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UserServiceTest.testThatWhenUserHaveAddedQuestionsAQuestionCanBeDeletedFromListOfQuestion" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Champions_QuizApp" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.example.services.user.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.example.services.user" />
+      <option name="MAIN_CLASS_NAME" value="org.example.services.user.UserServiceTest" />
+      <option name="METHOD_NAME" value="testThatWhenUserHaveAddedQuestionsAQuestionCanBeDeletedFromListOfQuestion" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UserServiceTest.testThatWhenUserHaveLoginAndRegisterAddQuizWithTitleWhichAlreadyExistThrowsException" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Champions_QuizApp" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.example.services.user.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.example.services.user" />
+      <option name="MAIN_CLASS_NAME" value="org.example.services.user.UserServiceTest" />
+      <option name="METHOD_NAME" value="testThatWhenUserHaveLoginAndRegisterAddQuizWithTitleWhichAlreadyExistThrowsException" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.UserServiceTest" />
+        <item itemvalue="JUnit.UserServiceTest.testThatWhenQuizHaveBeenAddedUserCanStillAddQuestionToTheQuiz" />
+        <item itemvalue="JUnit.UserServiceTest.testThatQuestionsWhenItHasBeenAddedWeCanAddQuestionToItLaterButIfTitleIsWrongThrowExcpetion" />
+        <item itemvalue="JUnit.UserServiceTest.testThatWhenUserHaveLoginAndRegisterAddQuizWithTitleWhichAlreadyExistThrowsException" />
+        <item itemvalue="JUnit.UserServiceTest.testThatWhenUserHaveAddedQuestionsAQuestionCanBeDeletedFromListOfQuestion" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -39,8 +216,23 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1706213116561</updated>
-      <workItem from="1706213117597" duration="19000" />
+      <workItem from="1706213117597" duration="3452000" />
+      <workItem from="1706293624061" duration="22321000" />
+      <workItem from="1706450560703" duration="2334000" />
+      <workItem from="1706474266895" duration="9093000" />
+      <workItem from="1706519072744" duration="1067000" />
+      <workItem from="1706526794192" duration="1673000" />
+      <workItem from="1706586390278" duration="691000" />
+      <workItem from="1706733084750" duration="3998000" />
+      <workItem from="1706755352373" duration="1100000" />
+      <workItem from="1706758855805" duration="3094000" />
+      <workItem from="1706855738577" duration="64559000" />
+      <workItem from="1707199815535" duration="3270000" />
+      <workItem from="1707223235244" duration="12413000" />
     </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
 </project>
