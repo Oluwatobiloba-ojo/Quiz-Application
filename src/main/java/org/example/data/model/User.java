@@ -21,6 +21,4 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role userRole;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.EAGER, orphanRemoval = true)
-    private List<QuizPage> quizPageList ;
 }

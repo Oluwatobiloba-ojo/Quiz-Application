@@ -2,11 +2,10 @@ package org.example.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
-public class AddQuizResponse {
-    private String message;
+public class ApiResponse {
+    private boolean isSuccessful;
+    private Object message;
 }

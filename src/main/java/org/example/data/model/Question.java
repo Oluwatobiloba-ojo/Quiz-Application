@@ -19,7 +19,7 @@ public class Question {
     private String optionD ;
     private String answer ;
     private Long questionNo;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_quizPage_id", referencedColumnName = "id")
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "fk_quizPage_id")
     private QuizPage quizPage ;
 }

@@ -1,5 +1,6 @@
 package org.example.services.user;
 
+import jakarta.transaction.Transactional;
 import org.example.data.model.Question;
 import org.example.data.repository.QuestionRepository;
 import org.example.data.repository.QuizPageRepository;
@@ -19,6 +20,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @TestPropertySource("/test.properties")
+@Transactional
 class UserServiceTest {
 
     @Autowired
@@ -308,7 +310,7 @@ class UserServiceTest {
        Question newQuestion = setQuestion("What is the two sister of lazarus", "Mary and Martha",
                "Mary and Racheal","Racheal and Martha","Mary and Martha","Martha and Sarah" );
        AddQuestionRequest addQuestionRequest = new AddQuestionRequest();
-       addQuestionRequest.setQuizTitle("gospel");
+       addQuestionRequest.setQuizTitle("wrongTitle");
        addQuestionRequest.setUserEmail(registerRequest.getEmail());
        addQuestionRequest.setQuestion(newQuestion);
        assertThrows(QuestionTitleExistException.class, () -> userService.addQuestion(addQuestionRequest));
@@ -342,7 +344,77 @@ class UserServiceTest {
        userService.addQuestion(addQuestionRequest);
        assertEquals(3, userService.readQuestion("Gospel", registerRequest.getEmail()).size());
    }
+   @Test
+   public void testThatWhenUserWantToViewAllQuizWithWrongUsernameThrowException(){
+       userService.register(registerRequest);
+       userService.login(loginRequest);
 
+       List<Question> questionList = new ArrayList<>();
+       Question question1 =  setQuestion("when was jesus brought to the temple", "12", "12", "17", "15", "21");;
+       questionList.add(question1);
+       Question question = setQuestion("Where was jesus born","Manager","Jerusalem","Manager","Europe","Egypt");
+       questionList.add(question);
+
+       AddQuizRequest addQuizRequest = new AddQuizRequest();
+       addQuizRequest.setTitleQuiz("Gospel");
+       addQuizRequest.setUserEmail(registerRequest.getEmail());
+       addQuizRequest.setDescription("A gospel quiz for student and all");
+       addQuizRequest.setQuestionList(questionList);
+       userService.addQuiz(addQuizRequest);
+
+       Question question2 = setQuestion("What is the meaning of JVM", "Java virtual machine", "Jave visual memory",
+               "Java visual memory", "Java virtual machine", "Java virtual memory");
+       Question question3 = setQuestion("What is jdk", "java development kit", "java docs kit", "java docs content",
+               "java development kit", "java development content");
+       questionList.clear();
+       questionList.add(question2);
+       questionList.add(question3);
+
+       AddQuizRequest secondQuiz = new AddQuizRequest();
+      secondQuiz.setTitleQuiz("Java");
+      secondQuiz.setUserEmail(registerRequest.getEmail());
+      secondQuiz.setDescription("Math quiz");
+      secondQuiz.setQuestionList(questionList);
+      userService.addQuiz(secondQuiz);
+
+      assertThrows(UserExistException.class, () ->userService.viewAllQuiz("wrong username"));
+   }
+  @Test
+  public void testThatUserCanViewTitleAvailable(){
+      userService.register(registerRequest);
+      userService.login(loginRequest);
+
+      List<Question> questionList = new ArrayList<>();
+      Question question1 =  setQuestion("when was jesus brought to the temple", "12", "12", "17", "15", "21");;
+      questionList.add(question1);
+      Question question = setQuestion("Where was jesus born","Manager","Jerusalem","Manager","Europe","Egypt");
+      questionList.add(question);
+
+      AddQuizRequest addQuizRequest = new AddQuizRequest();
+      addQuizRequest.setTitleQuiz("Gospel");
+      addQuizRequest.setUserEmail(registerRequest.getEmail());
+      addQuizRequest.setDescription("A gospel quiz for student and all");
+      addQuizRequest.setQuestionList(questionList);
+      userService.addQuiz(addQuizRequest);
+
+      Question question2 = setQuestion("What is the meaning of JVM", "Java virtual machine", "Jave visual memory",
+              "Java visual memory", "Java virtual machine", "Java virtual memory");
+      Question question3 = setQuestion("What is jdk", "java development kit", "java docs kit", "java docs content",
+              "java development kit", "java development content");
+      questionList.clear();
+      questionList.add(question2);
+      questionList.add(question3);
+
+      AddQuizRequest secondQuiz = new AddQuizRequest();
+      secondQuiz.setTitleQuiz("Java");
+      secondQuiz.setUserEmail(registerRequest.getEmail());
+      secondQuiz.setDescription("Math quiz");
+      secondQuiz.setQuestionList(questionList);
+      userService.addQuiz(secondQuiz);
+
+      System.out.println(userService.viewAllQuiz(registerRequest.getEmail()));
+      assertEquals(2, userService.viewAllQuiz(registerRequest.getEmail()).size());
+  }
 
 
     private static Question setQuestion(String question, String answer, String optionA,String optionB,String optionC,String optionD ) {

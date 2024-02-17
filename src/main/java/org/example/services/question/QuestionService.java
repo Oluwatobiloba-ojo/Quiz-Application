@@ -7,8 +7,10 @@ import java.util.List;
 
 public interface QuestionService {
 
-    Question add(Question question, QuizPage page, Long count);
-    void update(Long questionId, List<Question> questionList, Question newQuestion);
-    void deleteQuestion(Long questionNo, List<Question> questionList);
-    Question addQuestion(List<Question> questionList, Question question, QuizPage page);
+    void add(Question question, QuizPage page, Long count);
+    Question update(Long questionId, QuizPage page, Question newQuestion);
+    void deleteQuestion(Long questionNo, QuizPage page);
+    void addQuestion(Question question, QuizPage page);
+    List<Question> findQuestionsFor(QuizPage page);
+    void deleteQuestions(QuizPage page);
 }

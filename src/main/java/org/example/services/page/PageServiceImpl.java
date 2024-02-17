@@ -11,7 +11,6 @@ import org.example.util.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,55 +20,62 @@ public class PageServiceImpl implements PageService{
     @Autowired
     private QuizPageRepository quizPageRepository;
     @Override
-    public QuizPage add(String titleQuiz, List<Question> questionList, String description, User user) {
+    public void add(String titleQuiz, List<Question> questionList, String description, User user) {
         if (pageExist(titleQuiz)) throw new QuestionTitleExistException("Title already taken");
         QuizPage page = Mapper.mapPage(titleQuiz, user, description);
         quizPageRepository.save(page);
-        List<Question> questions = new ArrayList<>();
         Long count = 1L;
         for (Question question : questionList){
-          Question question1 = questionService.add(question, page, count);
-          questions.add(question1);
+          questionService.add(question, page, count);
           count += 1;
         }
-        page.setQuestionList(questions);
-        return quizPageRepository.save(page);
+        quizPageRepository.save(page);
     }
 
     @Override
     public void updateQuestion(Long questionId, String title, User user, Question newQuestion) {
         if (!pageExist(title)) throw new QuestionTitleExistException("Title does not exist");
-        QuizPage page = quizPageRepository.findQuizPageByTitle(title);
+        QuizPage page = quizPageRepository.findQuizPageByUser_AndTitle(user, title);
         if (!page.getUser().getId().equals(user.getId())) throw new UserAuthorizeException("User not allowed to perform");
-        questionService.update(questionId, page.getQuestionList(), newQuestion);
+        questionService.update(questionId, page, newQuestion);
     }
 
     @Override
-    public QuizPage findPageByTitle(String quizTitle, List<QuizPage> quizPageList) {
-        for (QuizPage page : quizPageList){
-            if (page.getTitle().equals(quizTitle)) return page;
-        }
+    public QuizPage findPageByTitleAndUser(String quizTitle, User user) {
+        QuizPage page = quizPageRepository.findQuizPageByUser_AndTitle(user, quizTitle);
+        if (page != null) return page;
         throw new QuestionTitleExistException("Title does not exist");
     }
 
     @Override
-    public List<Question> readQuestion(String title, List<QuizPage> quizPageList) {
-        QuizPage page = findPageByTitle(title, quizPageList);
-        return page.getQuestionList();
+    public List<Question> readQuestion(String title, User user) {
+        QuizPage page = findPageByTitleAndUser(title, user);
+        return questionService.findQuestionsFor(page);
     }
 
     @Override
-    public void deleteQuestion(String quizTitle, List<QuizPage> quizPageList, Long questionNo) {
-        QuizPage page = findPageByTitle(quizTitle, quizPageList);
-        questionService.deleteQuestion(questionNo, page.getQuestionList());
+    public void deleteQuestion(String quizTitle, User user, Long questionNo) {
+        QuizPage page = findPageByTitleAndUser(quizTitle, user);
+        questionService.deleteQuestion(questionNo, page);
     }
 
     @Override
-    public void addQuestion(Question question, String quizTitle, List<QuizPage> quizPageList) {
-        QuizPage page = findPageByTitle(quizTitle, quizPageList);
-        Question question1 = questionService.addQuestion(page.getQuestionList(), question, page);
-        page.getQuestionList().add(question1);
+    public void addQuestion(Question question, String quizTitle, User user) {
+        QuizPage page = findPageByTitleAndUser(quizTitle, user);
+        questionService.addQuestion(question, page);
         quizPageRepository.save(page);
+    }
+
+    @Override
+    public List<QuizPage> viewAllPage() {
+        return quizPageRepository.findAll();
+    }
+
+    @Override
+    public void deletePage(User user, String quizTitle) {
+        QuizPage page = findPageByTitleAndUser(quizTitle, user);
+        questionService.deleteQuestions(page);
+        quizPageRepository.delete(page);
     }
 
     private boolean pageExist(String titleQuiz) {

@@ -10,13 +10,11 @@ import org.example.dto.response.AddQuizResponse;
 import org.example.exception.*;
 import org.example.services.page.PageService;
 import org.example.util.Mapper;
-import org.example.util.Validation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.example.util.Validation.*;
 
@@ -26,6 +24,7 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
     @Autowired
     PageService pageService;
+
     @Override
     public void register(RegisterRequest registerRequest) {
         if (userExist(registerRequest.getEmail())) throw new UserExistException("User already exist");
@@ -58,10 +57,10 @@ public class UserServiceImpl implements UserService {
     public AddQuizResponse addQuiz(AddQuizRequest addQuizRequest) {
         if (!userExist(addQuizRequest.getUserEmail())) throw new UserExistException("User does not exist");
         User user = userRepository.findUserByEmail(addQuizRequest.getUserEmail());
+        if(user.getUserRole() == Role.LEARNER) throw new UserAuthorizeException("Learner not allowed to access this method");
         if (user.isLocked()) throw new InvalidLoginDetail("User have not login");
 
-        QuizPage page = pageService.add(addQuizRequest.getTitleQuiz(), addQuizRequest.getQuestionList(), addQuizRequest.getDescription(), user);
-        user.getQuizPageList().add(page);
+        pageService.add(addQuizRequest.getTitleQuiz(), addQuizRequest.getQuestionList(), addQuizRequest.getDescription(), user);
         userRepository.save(user);
         return new AddQuizResponse("Quiz added successfully !!!!");
     }
@@ -71,10 +70,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findUserByEmail(userEmail);
         if (!user.getUserRole().equals(Role.TEACHER)) throw new UserAuthorizeException("User not allowed to perform");
         if (user.isLocked()) throw new InvalidLoginDetail("User have not login");
-        QuizPage page = pageService.findPageByTitle(quizTitle, user.getQuizPageList());
-        if (!page.getUser().getId().equals(user.getId())) throw new UserAuthorizeException("User not allowed to perform");
-        user.getQuizPageList().remove(page);
-        userRepository.save(user);
+        pageService.deletePage(user, quizTitle);
     }
 
     @Override
@@ -92,7 +88,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findUserByEmail(email);
         if (!user.getUserRole().equals(Role.TEACHER)) throw new UserAuthorizeException("User not allowed to perform");
         if (user.isLocked()) throw new InvalidLoginDetail("User have not login");
-        return pageService.readQuestion(title, user.getQuizPageList());
+        return pageService.readQuestion(title, user);
     }
 
     @Override
@@ -101,7 +97,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findUserByEmail(email);
         if (!user.getUserRole().equals(Role.TEACHER)) throw new UserAuthorizeException("User not allowed to perform");
         if (user.isLocked()) throw new InvalidLoginDetail("User have not login");
-        pageService.deleteQuestion(quizTitle, user.getQuizPageList(), questionNo);
+        pageService.deleteQuestion(quizTitle, user, questionNo);
     }
 
     @Override
@@ -110,7 +106,13 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findUserByEmail(addQuestionRequest.getUserEmail());
         if (!user.getUserRole().equals(Role.TEACHER)) throw new UserAuthorizeException("User not allowed to perform");
         if (user.isLocked()) throw new InvalidLoginDetail("User have not login");
-        pageService.addQuestion(addQuestionRequest.getQuestion(), addQuestionRequest.getQuizTitle(), user.getQuizPageList());
+        pageService.addQuestion(addQuestionRequest.getQuestion(), addQuestionRequest.getQuizTitle(), user);
+    }
+
+    @Override
+    public List<QuizPage> viewAllQuiz(String email) {
+        if (!userExist(email)) throw new UserExistException("User does not exist");
+        return pageService.viewAllPage();
     }
 
     private static boolean roleIsNotValid(String role) {

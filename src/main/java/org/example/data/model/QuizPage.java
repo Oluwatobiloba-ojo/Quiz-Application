@@ -1,5 +1,6 @@
 package org.example.data.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import jakarta.persistence.*;
@@ -13,6 +14,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "page")
+@ToString(exclude = {"user"})
 public class QuizPage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,10 +26,9 @@ public class QuizPage {
 
     private String description ;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "quizPage", fetch = FetchType.EAGER, orphanRemoval = true)
-    private List<Question> questionList ;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_user_id", referencedColumnName = "id")
+    @ManyToOne(cascade = {CascadeType.PERSIST})
+    @JoinColumn(name = "fk_user_id")
+    @JsonIgnore
     private User user;
 }

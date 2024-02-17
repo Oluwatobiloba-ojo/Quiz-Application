@@ -6,7 +6,6 @@ import org.example.data.repository.QuestionRepository;
 import org.example.exception.AnswerNotFoundException;
 import org.example.exception.QuestionBlankException;
 import org.example.exception.QuestionNotFoundException;
-import org.example.util.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +16,11 @@ public class QuestionServiceImpl implements QuestionService{
     @Autowired
     QuestionRepository questionRepository;
     @Override
-    public Question add(Question question, QuizPage page, Long count) {
+    public void add(Question question, QuizPage page, Long count) {
         validateQuestion(question);
         question.setQuizPage(page);
         question.setQuestionNo(count);
-        return questionRepository.save(question);
+        questionRepository.save(question);
     }
 
     private void validateQuestion(Question question) {
@@ -35,7 +34,8 @@ public class QuestionServiceImpl implements QuestionService{
     }
 
     @Override
-    public void update(Long questionId, List<Question> questionList, Question newQuestion) {
+    public Question update(Long questionId, QuizPage page, Question newQuestion) {
+        List<Question> questionList = questionRepository.findAllQuestionByQuizPage(page);
         for (int count = 0; count < questionList.size(); count++){
             if (questionList.get(count).getQuestionNo().equals(questionId)){
                 Question oldQuestion = questionList.get(count);
@@ -45,23 +45,38 @@ public class QuestionServiceImpl implements QuestionService{
                 if (newQuestion.getOptionC() != null) oldQuestion.setOptionC(newQuestion.getOptionC());
                 if (newQuestion.getOptionD() != null) oldQuestion.setOptionD(newQuestion.getOptionD());
                 if (newQuestion.getAnswer() != null) oldQuestion.setAnswer(newQuestion.getAnswer());
+                questionRepository.save(oldQuestion);
+                return oldQuestion;
             }
         }
         throw new QuestionNotFoundException("question does not exist");
     }
 
     @Override
-    public void deleteQuestion(Long questionNo, List<Question> questionList) {
+    public void deleteQuestion(Long questionNo, QuizPage page) {
+        List<Question> questionList = questionRepository.findAllQuestionByQuizPage(page);
         Question question = findQuestionByQuestionNo(questionList, questionNo);
         questionRepository.delete(question);
     }
 
     @Override
-    public Question addQuestion(List<Question> questionList, Question question, QuizPage page) {
+    public void addQuestion(Question question, QuizPage page) {
+        List<Question> questionList = questionRepository.findAllQuestionByQuizPage(page);
         validateQuestion(question);
-        question.setQuestionNo((long) (questionList.size() + 1));
+        question.setQuestionNo((questionList.get(questionList.size()-1).getQuestionNo() + 1));
         question.setQuizPage(page);
-        return questionRepository.save(question);
+        questionRepository.save(question);
+    }
+
+    @Override
+    public List<Question> findQuestionsFor(QuizPage page) {
+        return questionRepository.findAllQuestionByQuizPage(page);
+    }
+
+    @Override
+    public void deleteQuestions(QuizPage page) {
+        List<Question> question = findQuestionsFor(page);
+        questionRepository.deleteAll(question);
     }
 
     private Question findQuestionByQuestionNo(List<Question> questionList, Long questionNo) {
