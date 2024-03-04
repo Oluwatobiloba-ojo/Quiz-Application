@@ -78,6 +78,14 @@ public class PageServiceImpl implements PageService{
         quizPageRepository.delete(page);
     }
 
+    @Override
+    public List<Question> getQuestionsOf(String quizTitle) {
+        if (!pageExist(quizTitle)) throw new QuestionTitleExistException("Title does not exist");
+        QuizPage page = quizPageRepository.findQuizPageByTitle(quizTitle);
+        return questionService.findQuestionsFor(page);
+
+    }
+
     private boolean pageExist(String titleQuiz) {
         QuizPage quizPage = quizPageRepository.findQuizPageByTitle(titleQuiz);
         return quizPage != null;

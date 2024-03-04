@@ -15,16 +15,23 @@ public class QuizAppController {
 
     @Autowired
     UserService userService;
+    @GetMapping("/")
+    public void display(){
+        System.out.println("You are a boy");
+    }
 
     @PostMapping("/user")
     public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest){
+        System.out.println(registerRequest);
         RegisterResponse response = new RegisterResponse();
         try {
             userService.register(registerRequest);
             response.setMessage("You have successfully register with the following details !!!!");
+            System.out.println(response);
             return new ResponseEntity<>(new ApiResponse(true, response), HttpStatus.CREATED);
         }catch (QuizAppException exception){
             response.setMessage(exception.getMessage());
+            System.out.println(response.getMessage());
             return new ResponseEntity<>(new ApiResponse(false, response), HttpStatus.BAD_REQUEST);
         }
     }
@@ -113,7 +120,6 @@ public class QuizAppController {
             return new ResponseEntity<>(new ApiResponse(false, response), HttpStatus.BAD_REQUEST);
         }
     }
-
     @DeleteMapping("/question/{questionNo}")
     public ResponseEntity<?> deleteQuestion (@PathVariable("questionNo") Long questionNo,
                                              @RequestParam(name = "quizTitle") String quizTitle,
@@ -128,7 +134,4 @@ public class QuizAppController {
             return new ResponseEntity<>(new ApiResponse(false, response), HttpStatus.BAD_REQUEST);
         }
     }
-
-
-
 }

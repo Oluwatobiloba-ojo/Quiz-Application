@@ -20,4 +20,5 @@ public interface UserService {
     void deleteQuestion(String email, String quizTitle, Long questionNo);
     void addQuestion(AddQuestionRequest addQuestionRequest);
     List<QuizPage> viewAllQuiz(String email);
+    List<Question> takeQuiz(String quizTitle, String email);
 }

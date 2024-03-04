@@ -15,4 +15,5 @@ public interface PageService {
     void addQuestion(Question question, String quizTitle, User user);
     List<QuizPage> viewAllPage();
     void deletePage(User user, String quizTitle);
+    List<Question> getQuestionsOf(String quizTitle);
 }

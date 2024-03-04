@@ -21,7 +21,7 @@ import static org.example.util.Validation.*;
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
-    UserRepository userRepository;
+    public UserRepository userRepository;
     @Autowired
     PageService pageService;
 
@@ -29,7 +29,8 @@ public class UserServiceImpl implements UserService {
     public void register(RegisterRequest registerRequest) {
         if (userExist(registerRequest.getEmail())) throw new UserExistException("User already exist");
         if (!registerRequest.getPassword().equals(registerRequest.getConfirmPassword())) throw new PasswordNotMatchExceptions("Passwords does not match");
-        if (!validateEmail(registerRequest.getEmail())) throw new InvalidFormatDetailException("Email format was wrong");
+        if (!validateEmail(registerRequest.getEmail())) throw new InvalidFormatDetailException("Email format was wrong "+ registerRequest.getEmail());
+        System.out.println(registerRequest.getDateOfBirth());
         if (!validateDate(registerRequest.getDateOfBirth())) throw new InvalidFormatDetailException("Date format was wrong yyyy/mm/dd");
         if (!validatePassword(registerRequest.getPassword())) throw new InvalidFormatDetailException("Password is weak");
         if (!roleIsNotValid(registerRequest.getRole())) throw new InvalidFormatDetailException("Role must be either teacher or learner");
@@ -113,6 +114,14 @@ public class UserServiceImpl implements UserService {
     public List<QuizPage> viewAllQuiz(String email) {
         if (!userExist(email)) throw new UserExistException("User does not exist");
         return pageService.viewAllPage();
+    }
+
+    @Override
+    public List<Question> takeQuiz(String quizTitle, String email) {
+        if (!userExist(email)) throw new UserExistException("user does not exist");
+        User user = userRepository.findUserByEmail(email);
+        if (user.isLocked()) throw new InvalidLoginDetail("User have not login");
+        return pageService.getQuestionsOf(quizTitle);
     }
 
     private static boolean roleIsNotValid(String role) {

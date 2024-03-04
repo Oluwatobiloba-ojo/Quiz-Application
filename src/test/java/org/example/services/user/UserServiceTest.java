@@ -43,7 +43,7 @@ class UserServiceTest {
     public void setUpUserService(){
         registerRequest = new RegisterRequest();
         registerRequest.setEmail("deborahdelighted5@gmail.com");
-        registerRequest.setDateOfBirth("2001/04/24");
+        registerRequest.setDateOfBirth("24/04/2001");
         registerRequest.setFirstName("delight");
         registerRequest.setLastName("adewuyi");
         registerRequest.setPassword("Olawale123");
