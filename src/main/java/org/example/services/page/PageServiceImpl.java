@@ -24,7 +24,7 @@ public class PageServiceImpl implements PageService{
         if (pageExist(titleQuiz)) throw new QuestionTitleExistException("Title already taken");
         QuizPage page = Mapper.mapPage(titleQuiz, user, description);
         quizPageRepository.save(page);
-        Long count = 1L;
+        long count = 1L;
         for (Question question : questionList){
           questionService.add(question, page, count);
           count += 1;
@@ -83,7 +83,6 @@ public class PageServiceImpl implements PageService{
         if (!pageExist(quizTitle)) throw new QuestionTitleExistException("Title does not exist");
         QuizPage page = quizPageRepository.findQuizPageByTitle(quizTitle);
         return questionService.findQuestionsFor(page);
-
     }
 
     private boolean pageExist(String titleQuiz) {

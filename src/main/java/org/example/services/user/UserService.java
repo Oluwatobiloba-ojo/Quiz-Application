@@ -2,23 +2,21 @@ package org.example.services.user;
 
 import org.example.data.model.Question;
 import org.example.data.model.QuizPage;
-import org.example.data.model.User;
 import org.example.dto.request.*;
-import org.example.dto.response.AddQuizResponse;
+import org.example.dto.response.*;
 
-import java.util.Collection;
 import java.util.List;
 
 public interface UserService {
 
-    void register(RegisterRequest registerRequest);
-    void login(LoginRequest loginRequest);
+    RegisterResponse register(RegisterRequest registerRequest);
+    LoginResponse login(LoginRequest loginRequest);
     AddQuizResponse addQuiz(AddQuizRequest addQuizRequest);
-    void deleteQuiz(String userEmail, String quizTitle);
-    void updateQuestion(UpdateQuestionRequest request);
+    DeleteQuizResponse deleteQuiz(String userEmail, String quizTitle);
+    UpdateQuestionResponse updateQuestion(UpdateQuestionRequest request);
     List<Question> readQuestion(String title, String email);
-    void deleteQuestion(String email, String quizTitle, Long questionNo);
-    void addQuestion(AddQuestionRequest addQuestionRequest);
+    DeleteQuestionResponse deleteQuestion(String email, String quizTitle, Long questionNo);
+    AddQuestionResponse addQuestion(AddQuestionRequest addQuestionRequest);
     List<QuizPage> viewAllQuiz(String email);
     List<Question> takeQuiz(String quizTitle, String email);
 }

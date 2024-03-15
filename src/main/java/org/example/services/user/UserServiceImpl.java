@@ -6,7 +6,7 @@ import org.example.data.model.Role;
 import org.example.data.model.User;
 import org.example.data.repository.UserRepository;
 import org.example.dto.request.*;
-import org.example.dto.response.AddQuizResponse;
+import org.example.dto.response.*;
 import org.example.exception.*;
 import org.example.services.page.PageService;
 import org.example.util.Mapper;
@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
     PageService pageService;
 
     @Override
-    public void register(RegisterRequest registerRequest) {
+    public RegisterResponse register(RegisterRequest registerRequest) {
         if (userExist(registerRequest.getEmail())) throw new UserExistException("User already exist");
         if (!registerRequest.getPassword().equals(registerRequest.getConfirmPassword())) throw new PasswordNotMatchExceptions("Passwords does not match");
         if (!validateEmail(registerRequest.getEmail())) throw new InvalidFormatDetailException("Email format was wrong "+ registerRequest.getEmail());
@@ -36,6 +36,9 @@ public class UserServiceImpl implements UserService {
         if (!roleIsNotValid(registerRequest.getRole())) throw new InvalidFormatDetailException("Role must be either teacher or learner");
         User user = Mapper.mapUser(registerRequest);
         userRepository.save(user);
+        RegisterResponse response = new RegisterResponse();
+        response.setMessage("You have successfully register with the following details !!!!");
+        return response;
     }
 
     private boolean userExist(String email) {
@@ -43,7 +46,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void login(LoginRequest loginRequest) {
+    public LoginResponse login(LoginRequest loginRequest) {
         if (!userExist(loginRequest.getEmail())) throw new InvalidLoginDetail("Invalid login detail");
         User user = userRepository.findUserByEmail(loginRequest.getEmail());
         if (!user.isLocked()) throw new ActionDoneException("User already login");
@@ -52,6 +55,9 @@ public class UserServiceImpl implements UserService {
         if (!passwordEncoder.matches(loginRequest.getPassword(), encodePassword)) throw new InvalidLoginDetail("Invalid login detail");
         user.setLocked(false);
         userRepository.save(user);
+        LoginResponse response = new LoginResponse();
+        response.setMessage("You don login !!!!!");
+        return response;
     }
 
     @Override
@@ -66,21 +72,27 @@ public class UserServiceImpl implements UserService {
         return new AddQuizResponse("Quiz added successfully !!!!");
     }
     @Override
-    public void deleteQuiz(String userEmail, String quizTitle) {
+    public DeleteQuizResponse deleteQuiz(String userEmail, String quizTitle) {
         if (!userExist(userEmail)) throw new UserExistException("User does not exist");
         User user = userRepository.findUserByEmail(userEmail);
         if (!user.getUserRole().equals(Role.TEACHER)) throw new UserAuthorizeException("User not allowed to perform");
         if (user.isLocked()) throw new InvalidLoginDetail("User have not login");
         pageService.deletePage(user, quizTitle);
+        DeleteQuizResponse response = new DeleteQuizResponse();
+        response.setMessage(String.format("%s has been deleted", quizTitle));
+        return response;
     }
 
     @Override
-    public void updateQuestion(UpdateQuestionRequest request) {
+    public UpdateQuestionResponse updateQuestion(UpdateQuestionRequest request) {
         if (!userExist(request.getEmail())) throw new UserExistException("User does not exist");
         User user = userRepository.findUserByEmail(request.getEmail());
         if (!user.getUserRole().equals(Role.TEACHER)) throw new UserAuthorizeException("User not allowed to perform");
         if (user.isLocked()) throw new InvalidLoginDetail("User have not login");
         pageService.updateQuestion(request.getQuestionId(), request.getTitle(), user, request.getNewQuestion());
+        UpdateQuestionResponse response = new UpdateQuestionResponse();
+        response.setMessage(String.format("Question %s has been updated successfully",request.getQuestionId()));
+        return response;
     }
 
     @Override
@@ -93,21 +105,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteQuestion(String email, String quizTitle, Long questionNo) {
+    public DeleteQuestionResponse deleteQuestion(String email, String quizTitle, Long questionNo) {
         if (!userExist(email)) throw new UserExistException("User does not exist");
         User user = userRepository.findUserByEmail(email);
         if (!user.getUserRole().equals(Role.TEACHER)) throw new UserAuthorizeException("User not allowed to perform");
         if (user.isLocked()) throw new InvalidLoginDetail("User have not login");
         pageService.deleteQuestion(quizTitle, user, questionNo);
+        DeleteQuestionResponse response = new DeleteQuestionResponse();
+        response.setMessage(String.format("%s in %s has been deleted", questionNo, quizTitle));
+        return response;
     }
 
     @Override
-    public void addQuestion(AddQuestionRequest addQuestionRequest) {
+    public AddQuestionResponse addQuestion(AddQuestionRequest addQuestionRequest) {
         if (!userExist(addQuestionRequest.getUserEmail())) throw new UserExistException("User does not exist");
         User user = userRepository.findUserByEmail(addQuestionRequest.getUserEmail());
         if (!user.getUserRole().equals(Role.TEACHER)) throw new UserAuthorizeException("User not allowed to perform");
         if (user.isLocked()) throw new InvalidLoginDetail("User have not login");
         pageService.addQuestion(addQuestionRequest.getQuestion(), addQuestionRequest.getQuizTitle(), user);
+        AddQuestionResponse response = new AddQuestionResponse();
+        response.setMessage(String.format("%s question has been added to title", addQuestionRequest.getQuizTitle()));
+        return response;
     }
 
     @Override

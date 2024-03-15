@@ -15,123 +15,95 @@ public class QuizAppController {
 
     @Autowired
     UserService userService;
+
     @GetMapping("/")
-    public void display(){
+    public void display() {
         System.out.println("You are a boy");
     }
 
     @PostMapping("/user")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest){
-        System.out.println(registerRequest);
-        RegisterResponse response = new RegisterResponse();
+    public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) {
         try {
-            userService.register(registerRequest);
-            response.setMessage("You have successfully register with the following details !!!!");
-            System.out.println(response);
-            return new ResponseEntity<>(new ApiResponse(true, response), HttpStatus.CREATED);
-        }catch (QuizAppException exception){
-            response.setMessage(exception.getMessage());
-            System.out.println(response.getMessage());
-            return new ResponseEntity<>(new ApiResponse(false, response), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ApiResponse(true, userService.register(registerRequest)), HttpStatus.CREATED);
+        } catch (QuizAppException exception) {
+            return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
+
     @PostMapping("/user/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest){
-        LoginResponse response = new LoginResponse();
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         try {
-            userService.login(loginRequest);
-            response.setMessage("You don login !!!!!");
-            return new ResponseEntity<>(new ApiResponse(true, response), HttpStatus.OK);
-        }catch (QuizAppException exception){
-            response.setMessage(exception.getMessage());
-            return new ResponseEntity<>(new ApiResponse(false, response), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ApiResponse(true, userService.login(loginRequest)), HttpStatus.OK);
+        } catch (QuizAppException exception) {
+            return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()), HttpStatus.NOT_FOUND);
         }
     }
+
     @PostMapping("/quiz")
-    public ResponseEntity<?> addQuiz(@RequestBody AddQuizRequest request){
-        AddQuizResponse response = new AddQuizResponse();
+    public ResponseEntity<?> addQuiz(@RequestBody AddQuizRequest request) {
         try {
-            response = userService.addQuiz(request);
-            return new ResponseEntity<>(new ApiResponse(true, response), HttpStatus.CREATED);
-        }catch (QuizAppException exception){
-            response.setMessage(exception.getMessage());
-            return new ResponseEntity<>(new ApiResponse(false, response), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ApiResponse(true, userService.addQuiz(request)), HttpStatus.CREATED);
+        } catch (QuizAppException exception) {
+            return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
+
     @PatchMapping("/question/{questionId}")
-    public ResponseEntity<?> updateQuestion(@PathVariable("questionId") Long questionId,@RequestBody UpdateQuestionRequest request){
-        UpdateQuestionResponse response = new UpdateQuestionResponse();
+    public ResponseEntity<?> updateQuestion(@PathVariable("questionId") Long questionId, @RequestBody UpdateQuestionRequest request) {
         try {
             request.setQuestionId(questionId);
-            userService.updateQuestion(request);
-            response.setMessage(String.format("Question %s has been updated successfully",questionId));
-            return new ResponseEntity<>(new ApiResponse(true, response), HttpStatus.ACCEPTED);
-        }catch (QuizAppException exception){
-            response.setMessage(exception.getMessage());
-            return new ResponseEntity<>(new ApiResponse(false, response), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ApiResponse(true, userService.updateQuestion(request)), HttpStatus.ACCEPTED);
+        } catch (QuizAppException exception) {
+            return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()), HttpStatus.NOT_FOUND);
         }
     }
+
     @GetMapping("/quiz/{userEmail}")
-    public ResponseEntity<?> viewAllQuiz(@PathVariable("userEmail") String userEmail){
-        ViewAllQuizResponse viewAllQuizResponse = new ViewAllQuizResponse();
-        try{
-            viewAllQuizResponse.setMessage(userService.viewAllQuiz(userEmail));
-            return new ResponseEntity<>(new ApiResponse(true, viewAllQuizResponse), HttpStatus.OK);
-        }catch (QuizAppException exception){
-            viewAllQuizResponse.setMessage(exception.getMessage());
-            return new ResponseEntity<>(new ApiResponse(false, viewAllQuizResponse), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> viewAllQuiz(@PathVariable("userEmail") String userEmail) {
+        try {
+            return new ResponseEntity<>(new ApiResponse(true, userService.viewAllQuiz(userEmail)), HttpStatus.OK);
+        } catch (QuizAppException exception) {
+            return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
+
     @GetMapping("/question/{quizTitle}")
     public ResponseEntity<?> readQuestion(@PathVariable("quizTitle") String quizTitle,
-                                          @RequestParam(name = "email") String email){
-        ReadQuestionResponse response = new ReadQuestionResponse();
+                                          @RequestParam(name = "email") String email) {
         try {
-            response.setMessage(userService.readQuestion(quizTitle, email));
-            return new ResponseEntity<>(new ApiResponse(true, response), HttpStatus.FOUND);
-        }catch (QuizAppException exception){
-            response.setMessage(exception.getMessage());
-            return new ResponseEntity<>(new ApiResponse(false, response), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ApiResponse(true, userService.readQuestion(quizTitle, email)), HttpStatus.FOUND);
+        } catch (QuizAppException exception) {
+            return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
+
     @PostMapping("/question")
-    public ResponseEntity<?> addQuestion(@RequestBody AddQuestionRequest addQuestionRequest){
-        AddQuestionResponse response = new AddQuestionResponse();
+    public ResponseEntity<?> addQuestion(@RequestBody AddQuestionRequest addQuestionRequest) {
         try {
-            userService.addQuestion(addQuestionRequest);
-            response.setMessage(String.format("%s question has been added to title", addQuestionRequest.getQuizTitle()));
-            return new ResponseEntity<>(new ApiResponse(true, response), HttpStatus.CREATED);
-        }catch (QuizAppException exception){
-            response.setMessage(exception.getMessage());
-            return new ResponseEntity<>(new ApiResponse(false, response), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ApiResponse(true, userService.addQuestion(addQuestionRequest)), HttpStatus.CREATED);
+        } catch (QuizAppException exception) {
+            return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
 
     @DeleteMapping("/quiz/{userEmail}")
     public ResponseEntity<?> deleteQuiz(@PathVariable("userEmail") String userEmail,
-                                        @RequestParam(name = "quizTitle") String quizTitle){
-        DeleteQuizResponse response = new DeleteQuizResponse();
+                                        @RequestParam(name = "quizTitle") String quizTitle) {
         try {
-            userService.deleteQuiz(userEmail, quizTitle);
-            response.setMessage(String.format("%s has been deleted", quizTitle));
-            return new ResponseEntity<>(new ApiResponse(true, response), HttpStatus.ACCEPTED);
-        }catch (QuizAppException exception){
-            response.setMessage(exception.getMessage());
-            return new ResponseEntity<>(new ApiResponse(false, response), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ApiResponse(true, userService.deleteQuiz(userEmail, quizTitle)), HttpStatus.ACCEPTED);
+        } catch (QuizAppException exception) {
+            return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
+
     @DeleteMapping("/question/{questionNo}")
-    public ResponseEntity<?> deleteQuestion (@PathVariable("questionNo") Long questionNo,
-                                             @RequestParam(name = "quizTitle") String quizTitle,
-                                            @RequestParam(name = "email") String email){
-        DeleteQuestionResponse response = new DeleteQuestionResponse();
-        try{
-            userService.deleteQuestion(email, quizTitle, questionNo);
-            response.setMessage(String.format("%s in %s has been deleted", questionNo, quizTitle));
-            return new ResponseEntity<>(new ApiResponse(true, response), HttpStatus.OK);
-        }catch (QuizAppException exception){
-            response.setMessage(exception.getMessage());
-            return new ResponseEntity<>(new ApiResponse(false, response), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> deleteQuestion(@PathVariable("questionNo") Long questionNo,
+                                            @RequestParam(name = "quizTitle") String quizTitle,
+                                            @RequestParam(name = "email") String email) {
+        try {
+            return new ResponseEntity<>(new ApiResponse(true, userService.deleteQuestion(email, quizTitle, questionNo)), HttpStatus.OK);
+        } catch (QuizAppException exception) {
+            return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
 }

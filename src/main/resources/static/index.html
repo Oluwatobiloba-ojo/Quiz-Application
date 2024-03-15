@@ -1,10 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-$END$
+<form class="FormInput">
+    <label>Enter your first name: </label>
+    <input type="text" id="fname" required><br><br>
+
+    <label>Enter your last name</label>
+    <input type="text" id="lname" required><br><br>
+
+    <label>Enter your email address</label>
+    <input type="text" id="email" required autocomplete="email"><br><br>
+
+    <label>Enter your date of birth: </label>
+    <input type="date" id="d_o_b" required><br><br>
+
+    <label>Enter your password: </label>
+    <input type="password" id="password" required autocomplete="new-password"><br><br>
+
+    <label>Enter to confirm password:</label>
+    <input type="password" id="second_password" required autocomplete="new-password"><br><br>
+
+    <label>Enter your role:</label>
+    <select title="Roles" name="roles" id="role" required>
+        <option value="Teacher">Teacher</option>
+        <option value="Learner">Learner</option>
+    </select><br><br>
+    <button onclick="sendData()">Send Data</button>
+</form>
+<script src="index.js"></script>
 </body>
 </html>
