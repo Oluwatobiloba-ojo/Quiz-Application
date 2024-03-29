@@ -106,4 +106,14 @@ public class QuizAppController {
             return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PostMapping("/quiz/{quizTitle}")
+    public ResponseEntity<?> takeQuiz(@PathVariable("quizTitle") String quizTitle,
+                                      @RequestParam(name = "email") String email) {
+        try {
+            return new ResponseEntity<>(new ApiResponse(true, userService.takeQuiz(quizTitle, email)), HttpStatus.ACCEPTED);
+        } catch (QuizAppException exception) {
+            return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()), HttpStatus.NOT_FOUND);
+        }
+    }
 }

@@ -9,7 +9,7 @@ function displayTitle(){
     }).then(response => response.json())
       .then(data=>{
           if (data.successful === true) {
-              display(data.message.message);
+              display(data.message);
           }
       }).catch(error => console.error(`Error is fetching data `, error))
 }

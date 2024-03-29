@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
 
+import static jakarta.persistence.CascadeType.MERGE;
+import static jakarta.persistence.CascadeType.PERSIST;
+
 @Data
 @Entity
 @Table(name = "question")
@@ -19,7 +22,7 @@ public class Question {
     private String optionD ;
     private String answer ;
     private Long questionNo;
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = {PERSIST, MERGE})
     @JoinColumn(name = "fk_quizPage_id")
     private QuizPage quizPage ;
 }

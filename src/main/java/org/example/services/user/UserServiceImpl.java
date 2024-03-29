@@ -1,9 +1,6 @@
 package org.example.services.user;
 
-import org.example.data.model.Question;
-import org.example.data.model.QuizPage;
-import org.example.data.model.Role;
-import org.example.data.model.User;
+import org.example.data.model.*;
 import org.example.data.repository.UserRepository;
 import org.example.dto.request.*;
 import org.example.dto.response.*;
@@ -31,7 +28,7 @@ public class UserServiceImpl implements UserService {
         if (!registerRequest.getPassword().equals(registerRequest.getConfirmPassword())) throw new PasswordNotMatchExceptions("Passwords does not match");
         if (!validateEmail(registerRequest.getEmail())) throw new InvalidFormatDetailException("Email format was wrong "+ registerRequest.getEmail());
         System.out.println(registerRequest.getDateOfBirth());
-        if (!validateDate(registerRequest.getDateOfBirth())) throw new InvalidFormatDetailException("Date format was wrong yyyy/mm/dd");
+        if (!validateDate(registerRequest.getDateOfBirth())) throw new InvalidFormatDetailException("Date format was wrong yyyy-mm-dd");
         if (!validatePassword(registerRequest.getPassword())) throw new InvalidFormatDetailException("Password is weak");
         if (!roleIsNotValid(registerRequest.getRole())) throw new InvalidFormatDetailException("Role must be either teacher or learner");
         User user = Mapper.mapUser(registerRequest);
@@ -66,7 +63,6 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findUserByEmail(addQuizRequest.getUserEmail());
         if(user.getUserRole() == Role.LEARNER) throw new UserAuthorizeException("Learner not allowed to access this method");
         if (user.isLocked()) throw new InvalidLoginDetail("User have not login");
-
         pageService.add(addQuizRequest.getTitleQuiz(), addQuizRequest.getQuestionList(), addQuizRequest.getDescription(), user);
         userRepository.save(user);
         return new AddQuizResponse("Quiz added successfully !!!!");
@@ -131,11 +127,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<QuizPage> viewAllQuiz(String email) {
         if (!userExist(email)) throw new UserExistException("User does not exist");
+        if (userRepository.findUserByEmail(email).isLocked()) throw new InvalidLoginDetail("User have not login");
         return pageService.viewAllPage();
     }
 
     @Override
-    public List<Question> takeQuiz(String quizTitle, String email) {
+    public List<QuizQuestion> takeQuiz(String quizTitle, String email) {
         if (!userExist(email)) throw new UserExistException("user does not exist");
         User user = userRepository.findUserByEmail(email);
         if (user.isLocked()) throw new InvalidLoginDetail("User have not login");

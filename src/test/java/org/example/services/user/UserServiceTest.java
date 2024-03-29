@@ -43,7 +43,7 @@ class UserServiceTest {
     public void setUpUserService(){
         registerRequest = new RegisterRequest();
         registerRequest.setEmail("deborahdelighted5@gmail.com");
-        registerRequest.setDateOfBirth("24/04/2001");
+        registerRequest.setDateOfBirth("2001-04-24");
         registerRequest.setFirstName("delight");
         registerRequest.setLastName("adewuyi");
         registerRequest.setPassword("Olawale123");
@@ -295,7 +295,7 @@ class UserServiceTest {
        userService.login(loginRequest);
 
        List<Question> questionList = new ArrayList<>();
-       Question question1 =  setQuestion("when was jesus brought to the temple", "12", "12", "17", "15", "21");;
+       Question question1 =  setQuestion("when was jesus brought to the temple", "12", "12", "17", "15", "21");
        questionList.add(question1);
        Question question = setQuestion("Where was jesus born","Manager","Jerusalem","Manager","Europe","Egypt");
        questionList.add(question);
@@ -321,7 +321,7 @@ class UserServiceTest {
        userService.login(loginRequest);
 
        List<Question> questionList = new ArrayList<>();
-       Question question1 =  setQuestion("when was jesus brought to the temple", "12", "12", "17", "15", "21");;
+       Question question1 =  setQuestion("when was jesus brought to the temple", "12", "12", "17", "15", "21");
        questionList.add(question1);
        Question question = setQuestion("Where was jesus born","Manager","Jerusalem","Manager","Europe","Egypt");
        questionList.add(question);
@@ -350,7 +350,7 @@ class UserServiceTest {
        userService.login(loginRequest);
 
        List<Question> questionList = new ArrayList<>();
-       Question question1 =  setQuestion("when was jesus brought to the temple", "12", "12", "17", "15", "21");;
+       Question question1 =  setQuestion("when was jesus brought to the temple", "12", "12", "17", "15", "21");
        questionList.add(question1);
        Question question = setQuestion("Where was jesus born","Manager","Jerusalem","Manager","Europe","Egypt");
        questionList.add(question);
@@ -385,7 +385,7 @@ class UserServiceTest {
       userService.login(loginRequest);
 
       List<Question> questionList = new ArrayList<>();
-      Question question1 =  setQuestion("when was jesus brought to the temple", "12", "12", "17", "15", "21");;
+      Question question1 =  setQuestion("when was jesus brought to the temple", "12", "12", "17", "15", "21");
       questionList.add(question1);
       Question question = setQuestion("Where was jesus born","Manager","Jerusalem","Manager","Europe","Egypt");
       questionList.add(question);

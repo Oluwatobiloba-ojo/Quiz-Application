@@ -2,6 +2,7 @@ package org.example.services.page;
 
 import org.example.data.model.Question;
 import org.example.data.model.QuizPage;
+import org.example.data.model.QuizQuestion;
 import org.example.data.model.User;
 import org.example.data.repository.QuizPageRepository;
 import org.example.exception.QuestionTitleExistException;
@@ -11,6 +12,7 @@ import org.example.util.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,7 +25,6 @@ public class PageServiceImpl implements PageService{
     public void add(String titleQuiz, List<Question> questionList, String description, User user) {
         if (pageExist(titleQuiz)) throw new QuestionTitleExistException("Title already taken");
         QuizPage page = Mapper.mapPage(titleQuiz, user, description);
-        quizPageRepository.save(page);
         long count = 1L;
         for (Question question : questionList){
           questionService.add(question, page, count);
@@ -35,16 +36,15 @@ public class PageServiceImpl implements PageService{
     @Override
     public void updateQuestion(Long questionId, String title, User user, Question newQuestion) {
         if (!pageExist(title)) throw new QuestionTitleExistException("Title does not exist");
-        QuizPage page = quizPageRepository.findQuizPageByUser_AndTitle(user, title);
+        QuizPage page = findPageByTitleAndUser(title, user);
         if (!page.getUser().getId().equals(user.getId())) throw new UserAuthorizeException("User not allowed to perform");
         questionService.update(questionId, page, newQuestion);
     }
 
     @Override
     public QuizPage findPageByTitleAndUser(String quizTitle, User user) {
-        QuizPage page = quizPageRepository.findQuizPageByUser_AndTitle(user, quizTitle);
-        if (page != null) return page;
-        throw new QuestionTitleExistException("Title does not exist");
+        return quizPageRepository.findQuizPageByUser_AndTitle(user, quizTitle)
+                .orElseThrow(()-> new QuestionTitleExistException("Title does does not exist"));
     }
 
     @Override
@@ -79,10 +79,23 @@ public class PageServiceImpl implements PageService{
     }
 
     @Override
-    public List<Question> getQuestionsOf(String quizTitle) {
+    public List<QuizQuestion> getQuestionsOf(String quizTitle) {
         if (!pageExist(quizTitle)) throw new QuestionTitleExistException("Title does not exist");
         QuizPage page = quizPageRepository.findQuizPageByTitle(quizTitle);
-        return questionService.findQuestionsFor(page);
+        List<Question> questionList = questionService.findQuestionsFor(page);
+        List<QuizQuestion> questions = new ArrayList<>();
+        for (Question question: questionList) {
+            QuizQuestion quizQuestion = new QuizQuestion();
+            quizQuestion.setTitle(question.getQuizPage().getTitle());
+            quizQuestion.setQuestion(question.getQuestion());
+            quizQuestion.setOptionA(question.getOptionA());
+            quizQuestion.setOptionB(question.getOptionB());
+            quizQuestion.setOptionC(question.getOptionC());
+            quizQuestion.setOptionD(question.getOptionD());
+            quizQuestion.setAnswer(question.getAnswer());
+            questions.add(quizQuestion);
+        }
+        return questions;
     }
 
     private boolean pageExist(String titleQuiz) {
