@@ -2,10 +2,12 @@ package org.example.services.question;
 
 import org.example.data.model.Question;
 import org.example.data.model.QuizPage;
+import org.example.data.model.QuizQuestion;
 import org.example.data.repository.QuestionRepository;
 import org.example.exception.AnswerNotFoundException;
 import org.example.exception.QuestionBlankException;
 import org.example.exception.QuestionNotFoundException;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,15 +17,17 @@ import java.util.List;
 public class QuestionServiceImpl implements QuestionService{
     @Autowired
     QuestionRepository questionRepository;
+    private final ModelMapper mapper = new ModelMapper();
     @Override
-    public void add(Question question, QuizPage page, Long count) {
+    public void add(QuizQuestion question, QuizPage page, Long count) {
         validateQuestion(question);
-        question.setQuizPage(page);
-        question.setQuestionNo(count);
-        questionRepository.save(question);
+        Question question1 = mapper.map(question, Question.class);
+        question1.setQuizPage(page);
+        question1.setQuestionNo(count);
+        questionRepository.save(question1);
     }
 
-    private void validateQuestion(Question question) {
+    private void validateQuestion(QuizQuestion question) {
         if (question.getQuestion() == null) throw new QuestionBlankException("Question is empty");
         if (question.getAnswer() == null) throw new QuestionBlankException("Answer is empty");
         if (question.getOptionA() == null) throw new QuestionBlankException("Options is not valid");
@@ -34,7 +38,7 @@ public class QuestionServiceImpl implements QuestionService{
     }
 
     @Override
-    public Question update(Long questionId, QuizPage page, Question newQuestion) {
+    public Question update(Long questionId, QuizPage page, QuizQuestion newQuestion) {
         List<Question> questionList = questionRepository.findAllQuestionByQuizPage(page);
         if(answerNotExistInOption(newQuestion)) throw new AnswerNotFoundException("Answer does not exist in options");
         for (int count = 0; count < questionList.size(); count++){
@@ -47,7 +51,7 @@ public class QuestionServiceImpl implements QuestionService{
         throw new QuestionNotFoundException("question does not exist");
     }
 
-    private static Question updateOldQuestion(Question newQuestion, List<Question> questionList, int count) {
+    private static Question updateOldQuestion(QuizQuestion newQuestion, List<Question> questionList, int count) {
         Question oldQuestion = questionList.get(count);
         if (newQuestion.getQuestion() != null) oldQuestion.setQuestion(newQuestion.getQuestion());
         if (newQuestion.getOptionA() != null) oldQuestion.setOptionA(newQuestion.getOptionA());
@@ -66,22 +70,26 @@ public class QuestionServiceImpl implements QuestionService{
     }
 
     @Override
-    public void addQuestion(Question question, QuizPage page) {
+    public void addQuestion(QuizQuestion question, QuizPage page) {
         List<Question> questionList = questionRepository.findAllQuestionByQuizPage(page);
         validateQuestion(question);
-        question.setQuestionNo((questionList.get(questionList.size()-1).getQuestionNo() + 1));
-        question.setQuizPage(page);
-        questionRepository.save(question);
+        Question question1 = mapper.map(question, Question.class);
+        question1.setQuestionNo((questionList.get(questionList.size()-1).getQuestionNo() + 1));
+        question1.setQuizPage(page);
+        questionRepository.save(question1);
     }
 
     @Override
-    public List<Question> findQuestionsFor(QuizPage page) {
-        return questionRepository.findAllQuestionByQuizPage(page);
+    public List<QuizQuestion> findQuestionsFor(QuizPage page) {
+        return questionRepository.findAllQuestionByQuizPage(page)
+                                 .stream()
+                                 .map(QuizQuestion::new)
+                                 .toList();
     }
 
     @Override
     public void deleteQuestions(QuizPage page) {
-        List<Question> question = findQuestionsFor(page);
+        List<Question> question = questionRepository.findAllQuestionByQuizPage(page);
         questionRepository.deleteAll(question);
     }
 
@@ -92,7 +100,7 @@ public class QuestionServiceImpl implements QuestionService{
         throw new QuestionNotFoundException("Question does not exist");
     }
 
-    private boolean answerNotExistInOption(Question question) {
+    private boolean answerNotExistInOption(QuizQuestion question) {
         if (question.getOptionA().equals(question.getAnswer())) return false;
         else if (question.getOptionB().equals(question.getAnswer())) return false;
         else if (question.getOptionC().equals(question.getAnswer())) return false;

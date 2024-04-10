@@ -1,11 +1,12 @@
 package org.example.services.user;
 
 import jakarta.transaction.Transactional;
-import org.example.data.model.Question;
+import org.example.data.model.QuizQuestion;
 import org.example.data.repository.QuestionRepository;
 import org.example.data.repository.QuizPageRepository;
 import org.example.data.repository.UserRepository;
 import org.example.dto.request.*;
+import org.example.dto.response.QuizPageResponse;
 import org.example.exception.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,10 +14,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @TestPropertySource("/test.properties")
@@ -106,8 +109,8 @@ class UserServiceTest {
     }
     @Test
     public void testThatWhenUserWantToAddQuizAndUserDoesNotExistThrowsException(){
-        List<Question> questionList = new ArrayList<>();
-        Question question1 = setQuestion("when was jesus brought to the temple", "12", "12", "17", "15", "21");
+        List<QuizQuestion> questionList = new ArrayList<>();
+        QuizQuestion question1 = setQuestion("when was jesus brought to the temple", "12", "12", "17", "15", "21");
         questionList.add(question1);
         question1 = setQuestion("Where was jesus born","Manager","Jerusalem","Manager","Europe","Egypt");
         questionList.add(question1);
@@ -122,9 +125,9 @@ class UserServiceTest {
     @Test
     public void testThatWhenUserHasRegisterButHaveNotLoginAndWantToAddQuestionThrowsException(){
         userService.register(registerRequest);
-        List<Question> questionList = new ArrayList<>();
+        List<QuizQuestion> questionList = new ArrayList<>();
 
-        Question question1 =  setQuestion("when was jesus brought to the temple", "12", "12", "17", "15", "21");
+        QuizQuestion question1 =  setQuestion("when was jesus brought to the temple", "12", "12", "17", "15", "21");
         questionList.add(question1);
 
 
@@ -139,8 +142,8 @@ class UserServiceTest {
     public void testThatIfOurQuestionIsEmptyThrowsException(){
         userService.register(registerRequest);
         userService.login(loginRequest);
-        List<Question> questionList = new ArrayList<>();
-        Question question = new Question();
+        List<QuizQuestion> questionList = new ArrayList<>();
+        QuizQuestion question = new QuizQuestion();
         questionList.add(question);
 
         AddQuizRequest request = new AddQuizRequest();
@@ -156,10 +159,10 @@ class UserServiceTest {
         userService.register(registerRequest);
         userService.login(loginRequest);
 
-        List<Question> questionList = new ArrayList<>();
-        Question question1 =  setQuestion("when was jesus brought to the temple", "12", "12", "17", "15", "21");
+        List<QuizQuestion> questionList = new ArrayList<>();
+        QuizQuestion question1 =  setQuestion("when was jesus brought to the temple", "12", "12", "17", "15", "21");
         questionList.add(question1);
-        Question question = setQuestion("Where was jesus born","Manager","Jerusalem","Manager","Europe","Egypt");
+        QuizQuestion question = setQuestion("Where was jesus born","Manager","Jerusalem","Manager","Europe","Egypt");
         questionList.add(question);
 
         AddQuizRequest addQuizRequest = new AddQuizRequest();
@@ -175,8 +178,8 @@ class UserServiceTest {
        userService.register(registerRequest);
        userService.login(loginRequest);
 
-       List<Question> questionList = new ArrayList<>();
-       Question question1 =  setQuestion("when was jesus brought to the temple", "age", "12", "17", "15", "21");
+       List<QuizQuestion> questionList = new ArrayList<>();
+       QuizQuestion question1 =  setQuestion("when was jesus brought to the temple", "age", "12", "17", "15", "21");
        questionList.add(question1);
 
        AddQuizRequest addQuizRequest = new AddQuizRequest();
@@ -191,8 +194,8 @@ class UserServiceTest {
        userService.register(registerRequest);
        userService.login(loginRequest);
 
-       List<Question> questionList = new ArrayList<>();
-       Question question1 = setQuestion("when was jesus brought to the temple", "12", "12", "17", "15", "21");
+       List<QuizQuestion> questionList = new ArrayList<>();
+       QuizQuestion question1 = setQuestion("when was jesus brought to the temple", "12", "12", "17", "15", "21");
        questionList.add(question1);
 
        AddQuizRequest addQuizRequest = new AddQuizRequest();
@@ -208,8 +211,8 @@ class UserServiceTest {
        userService.register(registerRequest);
        userService.login(loginRequest);
 
-       List<Question> questionList = new ArrayList<>();
-       Question question1 = setQuestion("when was jesus brought to the temple", "12", "12", "17", "15", "21");
+       List<QuizQuestion> questionList = new ArrayList<>();
+       QuizQuestion question1 = setQuestion("when was jesus brought to the temple", "12", "12", "17", "15", "21");
        questionList.add(question1);
        AddQuizRequest addQuizRequest = new AddQuizRequest();
        addQuizRequest.setTitleQuiz("Gospel");
@@ -229,8 +232,8 @@ class UserServiceTest {
        userService.register(registerRequest);
        userService.login(loginRequest);
 
-       List<Question> questionList = new ArrayList<>();
-       Question question1 = setQuestion("when was jesus brought to the temple", "12", "12", "17", "15", "21");
+       List<QuizQuestion> questionList = new ArrayList<>();
+       QuizQuestion question1 = setQuestion("when was jesus brought to the temple", "12", "12", "17", "15", "21");
        questionList.add(question1);
 
        AddQuizRequest addQuizRequest = new AddQuizRequest();
@@ -248,8 +251,8 @@ class UserServiceTest {
         userService.register(registerRequest);
         userService.login(loginRequest);
 
-       List<Question> questionList = new ArrayList<>();
-       Question question1 = setQuestion("when was jesus brought to the temple", "12", "12", "17", "15", "21");
+       List<QuizQuestion> questionList = new ArrayList<>();
+       QuizQuestion question1 = setQuestion("when was jesus brought to the temple", "12", "12", "17", "15", "21");
        questionList.add(question1);
 
        AddQuizRequest addQuizRequest = new AddQuizRequest();
@@ -259,7 +262,7 @@ class UserServiceTest {
        addQuizRequest.setQuestionList(questionList);
        userService.addQuiz(addQuizRequest);
 
-       Question newQuestion = setQuestion("What is the name of jesus earthly father", "Joseph", "mark", "John", "Joseph", "Joshua");
+       QuizQuestion newQuestion = setQuestion("What is the name of jesus earthly father", "Joseph", "mark", "John", "Joseph", "Joshua");
        UpdateQuestionRequest request = new UpdateQuestionRequest();
        request.setTitle("Gospel");
        request.setNewQuestion(newQuestion);
@@ -272,10 +275,10 @@ class UserServiceTest {
        userService.register(registerRequest);
        userService.login(loginRequest);
 
-       List<Question> questionList = new ArrayList<>();
-       Question question1 = setQuestion("when was jesus brought to the temple", "12", "12", "17", "15", "21");
+       List<QuizQuestion> questionList = new ArrayList<>();
+       QuizQuestion question1 = setQuestion("when was jesus brought to the temple", "12", "12", "17", "15", "21");
        questionList.add(question1);
-       Question question = setQuestion("Where was jesus born","Manager","Jerusalem","Manager","Europe","Egypt");
+       QuizQuestion question = setQuestion("Where was jesus born","Manager","Jerusalem","Manager","Europe","Egypt");
        questionList.add(question);
 
        AddQuizRequest addQuizRequest = new AddQuizRequest();
@@ -294,10 +297,10 @@ class UserServiceTest {
        userService.register(registerRequest);
        userService.login(loginRequest);
 
-       List<Question> questionList = new ArrayList<>();
-       Question question1 =  setQuestion("when was jesus brought to the temple", "12", "12", "17", "15", "21");
+       List<QuizQuestion> questionList = new ArrayList<>();
+       QuizQuestion question1 =  setQuestion("when was jesus brought to the temple", "12", "12", "17", "15", "21");
        questionList.add(question1);
-       Question question = setQuestion("Where was jesus born","Manager","Jerusalem","Manager","Europe","Egypt");
+       QuizQuestion question = setQuestion("Where was jesus born","Manager","Jerusalem","Manager","Europe","Egypt");
        questionList.add(question);
 
        AddQuizRequest addQuizRequest = new AddQuizRequest();
@@ -307,7 +310,7 @@ class UserServiceTest {
        addQuizRequest.setQuestionList(questionList);
        userService.addQuiz(addQuizRequest);
 
-       Question newQuestion = setQuestion("What is the two sister of lazarus", "Mary and Martha",
+       QuizQuestion newQuestion = setQuestion("What is the two sister of lazarus", "Mary and Martha",
                "Mary and Racheal","Racheal and Martha","Mary and Martha","Martha and Sarah" );
        AddQuestionRequest addQuestionRequest = new AddQuestionRequest();
        addQuestionRequest.setQuizTitle("wrongTitle");
@@ -320,10 +323,10 @@ class UserServiceTest {
        userService.register(registerRequest);
        userService.login(loginRequest);
 
-       List<Question> questionList = new ArrayList<>();
-       Question question1 =  setQuestion("when was jesus brought to the temple", "12", "12", "17", "15", "21");
+       List<QuizQuestion> questionList = new ArrayList<>();
+       QuizQuestion question1 =  setQuestion("when was jesus brought to the temple", "12", "12", "17", "15", "21");
        questionList.add(question1);
-       Question question = setQuestion("Where was jesus born","Manager","Jerusalem","Manager","Europe","Egypt");
+       QuizQuestion question = setQuestion("Where was jesus born","Manager","Jerusalem","Manager","Europe","Egypt");
        questionList.add(question);
 
        AddQuizRequest addQuizRequest = new AddQuizRequest();
@@ -333,7 +336,7 @@ class UserServiceTest {
        addQuizRequest.setQuestionList(questionList);
        userService.addQuiz(addQuizRequest);
 
-       Question newQuestion = setQuestion("What is the two sister of lazarus", "Mary and Martha",
+       QuizQuestion newQuestion = setQuestion("What is the two sister of lazarus", "Mary and Martha",
                "Mary and Racheal","Racheal and Martha","Mary and Martha","Martha and Sarah" );
 
        AddQuestionRequest addQuestionRequest = new AddQuestionRequest();
@@ -349,10 +352,10 @@ class UserServiceTest {
        userService.register(registerRequest);
        userService.login(loginRequest);
 
-       List<Question> questionList = new ArrayList<>();
-       Question question1 =  setQuestion("when was jesus brought to the temple", "12", "12", "17", "15", "21");
+       List<QuizQuestion> questionList = new ArrayList<>();
+       QuizQuestion question1 =  setQuestion("when was jesus brought to the temple", "12", "12", "17", "15", "21");
        questionList.add(question1);
-       Question question = setQuestion("Where was jesus born","Manager","Jerusalem","Manager","Europe","Egypt");
+       QuizQuestion question = setQuestion("Where was jesus born","Manager","Jerusalem","Manager","Europe","Egypt");
        questionList.add(question);
 
        AddQuizRequest addQuizRequest = new AddQuizRequest();
@@ -362,9 +365,9 @@ class UserServiceTest {
        addQuizRequest.setQuestionList(questionList);
        userService.addQuiz(addQuizRequest);
 
-       Question question2 = setQuestion("What is the meaning of JVM", "Java virtual machine", "Jave visual memory",
+       QuizQuestion question2 = setQuestion("What is the meaning of JVM", "Java virtual machine", "Jave visual memory",
                "Java visual memory", "Java virtual machine", "Java virtual memory");
-       Question question3 = setQuestion("What is jdk", "java development kit", "java docs kit", "java docs content",
+       QuizQuestion question3 = setQuestion("What is jdk", "java development kit", "java docs kit", "java docs content",
                "java development kit", "java development content");
        questionList.clear();
        questionList.add(question2);
@@ -384,10 +387,10 @@ class UserServiceTest {
       userService.register(registerRequest);
       userService.login(loginRequest);
 
-      List<Question> questionList = new ArrayList<>();
-      Question question1 =  setQuestion("when was jesus brought to the temple", "12", "12", "17", "15", "21");
+      List<QuizQuestion> questionList = new ArrayList<>();
+      QuizQuestion question1 =  setQuestion("when was jesus brought to the temple", "12", "12", "17", "15", "21");
       questionList.add(question1);
-      Question question = setQuestion("Where was jesus born","Manager","Jerusalem","Manager","Europe","Egypt");
+      QuizQuestion question = setQuestion("Where was jesus born","Manager","Jerusalem","Manager","Europe","Egypt");
       questionList.add(question);
 
       AddQuizRequest addQuizRequest = new AddQuizRequest();
@@ -397,9 +400,9 @@ class UserServiceTest {
       addQuizRequest.setQuestionList(questionList);
       userService.addQuiz(addQuizRequest);
 
-      Question question2 = setQuestion("What is the meaning of JVM", "Java virtual machine", "Jave visual memory",
+      QuizQuestion question2 = setQuestion("What is the meaning of JVM", "Java virtual machine", "Jave visual memory",
               "Java visual memory", "Java virtual machine", "Java virtual memory");
-      Question question3 = setQuestion("What is jdk", "java development kit", "java docs kit", "java docs content",
+      QuizQuestion question3 = setQuestion("What is jdk", "java development kit", "java docs kit", "java docs content",
               "java development kit", "java development content");
       questionList.clear();
       questionList.add(question2);
@@ -416,9 +419,19 @@ class UserServiceTest {
       assertEquals(2, userService.viewAllQuiz(registerRequest.getEmail()).size());
   }
 
+  @Test
+  @Sql(scripts = "/scripts/insert.sql")
+  public void testForTheQuizCreatedByAUser(){
+        List<QuizPageResponse> responses = userService.viewQuizCreatedBy("test@gmail.com");
+        assertThat(responses).isNotNull();
+        assertThat(responses.size()).isEqualTo(2);
+        assertThat(userService.viewAllQuiz("test@gmail.com").size()).isEqualTo(3);
+  }
 
-    private static Question setQuestion(String question, String answer, String optionA,String optionB,String optionC,String optionD ) {
-        Question question1 = new Question();
+
+
+  private static QuizQuestion setQuestion(String question, String answer, String optionA,String optionB,String optionC,String optionD ) {
+        QuizQuestion question1 = new QuizQuestion();
         question1.setQuestion(question);
         question1.setOptionA(optionA);
         question1.setOptionB(optionB);
@@ -427,10 +440,5 @@ class UserServiceTest {
         question1.setAnswer(answer);
         return question1;
     }
-
-
-
-
-
 
 }

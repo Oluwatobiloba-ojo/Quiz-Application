@@ -21,7 +21,7 @@ public class Question {
     private String optionC ;
     private String optionD ;
     private String answer ;
-    private Long questionNo;
+    private Long questionNo ;
     @ManyToOne(cascade = {PERSIST, MERGE})
     @JoinColumn(name = "fk_quizPage_id")
     private QuizPage quizPage ;

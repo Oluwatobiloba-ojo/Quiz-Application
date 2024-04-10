@@ -1,10 +1,10 @@
 package org.example.services.page;
 
-import org.example.data.model.Question;
 import org.example.data.model.QuizPage;
 import org.example.data.model.QuizQuestion;
 import org.example.data.model.User;
 import org.example.data.repository.QuizPageRepository;
+import org.example.dto.response.QuizPageResponse;
 import org.example.exception.QuestionTitleExistException;
 import org.example.exception.UserAuthorizeException;
 import org.example.services.question.QuestionService;
@@ -12,7 +12,6 @@ import org.example.util.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,12 +20,13 @@ public class PageServiceImpl implements PageService{
     private QuestionService questionService;
     @Autowired
     private QuizPageRepository quizPageRepository;
+
     @Override
-    public void add(String titleQuiz, List<Question> questionList, String description, User user) {
+    public void add(String titleQuiz, List<QuizQuestion> questionList, String description, User user) {
         if (pageExist(titleQuiz)) throw new QuestionTitleExistException("Title already taken");
         QuizPage page = Mapper.mapPage(titleQuiz, user, description);
         long count = 1L;
-        for (Question question : questionList){
+        for (QuizQuestion question : questionList){
           questionService.add(question, page, count);
           count += 1;
         }
@@ -34,7 +34,7 @@ public class PageServiceImpl implements PageService{
     }
 
     @Override
-    public void updateQuestion(Long questionId, String title, User user, Question newQuestion) {
+    public void updateQuestion(Long questionId, String title, User user, QuizQuestion newQuestion) {
         if (!pageExist(title)) throw new QuestionTitleExistException("Title does not exist");
         QuizPage page = findPageByTitleAndUser(title, user);
         if (!page.getUser().getId().equals(user.getId())) throw new UserAuthorizeException("User not allowed to perform");
@@ -48,7 +48,7 @@ public class PageServiceImpl implements PageService{
     }
 
     @Override
-    public List<Question> readQuestion(String title, User user) {
+    public List<QuizQuestion> readQuestion(String title, User user) {
         QuizPage page = findPageByTitleAndUser(title, user);
         return questionService.findQuestionsFor(page);
     }
@@ -60,15 +60,18 @@ public class PageServiceImpl implements PageService{
     }
 
     @Override
-    public void addQuestion(Question question, String quizTitle, User user) {
+    public void addQuestion(QuizQuestion question, String quizTitle, User user) {
         QuizPage page = findPageByTitleAndUser(quizTitle, user);
         questionService.addQuestion(question, page);
         quizPageRepository.save(page);
     }
 
     @Override
-    public List<QuizPage> viewAllPage() {
-        return quizPageRepository.findAll();
+    public List<QuizPageResponse> viewAllPage() {
+        return quizPageRepository.findAll()
+                                .stream()
+                                .map(QuizPageResponse::new)
+                                .toList();
     }
 
     @Override
@@ -82,20 +85,15 @@ public class PageServiceImpl implements PageService{
     public List<QuizQuestion> getQuestionsOf(String quizTitle) {
         if (!pageExist(quizTitle)) throw new QuestionTitleExistException("Title does not exist");
         QuizPage page = quizPageRepository.findQuizPageByTitle(quizTitle);
-        List<Question> questionList = questionService.findQuestionsFor(page);
-        List<QuizQuestion> questions = new ArrayList<>();
-        for (Question question: questionList) {
-            QuizQuestion quizQuestion = new QuizQuestion();
-            quizQuestion.setTitle(question.getQuizPage().getTitle());
-            quizQuestion.setQuestion(question.getQuestion());
-            quizQuestion.setOptionA(question.getOptionA());
-            quizQuestion.setOptionB(question.getOptionB());
-            quizQuestion.setOptionC(question.getOptionC());
-            quizQuestion.setOptionD(question.getOptionD());
-            quizQuestion.setAnswer(question.getAnswer());
-            questions.add(quizQuestion);
-        }
-        return questions;
+        return questionService.findQuestionsFor(page);
+    }
+
+    @Override
+    public List<QuizPageResponse> findPagesBelongingTo(User user) {
+       return quizPageRepository.findQuizPagesByUser(user)
+                          .stream()
+                          .map(QuizPageResponse::new)
+                          .toList();
     }
 
     private boolean pageExist(String titleQuiz) {

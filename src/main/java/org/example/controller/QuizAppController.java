@@ -116,4 +116,14 @@ public class QuizAppController {
             return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()), HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/teacher/quiz/{email}")
+    public ResponseEntity<?> viewQuizBelonging(@PathVariable("email") String email){
+        try{
+            return new ResponseEntity<>(new ApiResponse(true, userService.viewQuizCreatedBy(email)), HttpStatus.FOUND);
+        }catch (QuizAppException exception){
+            return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()), HttpStatus.NOT_FOUND);
+        }
+    }
+
 }

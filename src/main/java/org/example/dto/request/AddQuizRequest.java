@@ -1,8 +1,7 @@
 package org.example.dto.request;
 
 import lombok.Data;
-import org.aspectj.weaver.patterns.TypePatternQuestions;
-import org.example.data.model.Question;
+import org.example.data.model.QuizQuestion;
 
 import java.util.List;
 
@@ -11,5 +10,5 @@ public class AddQuizRequest {
     private String titleQuiz ;
     private String description ;
     private String userEmail ;
-    private List<Question> questionList ;
+    private List<QuizQuestion> questionList ;
 }
